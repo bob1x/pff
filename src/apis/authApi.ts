@@ -8,7 +8,7 @@ export interface AuthUser {
     first_name: string;
     last_name: string;
     role: 'user' | 'hr';
-}
+}   
 
 export interface AuthResponse {
     access: string;

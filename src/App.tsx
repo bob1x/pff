@@ -3,6 +3,7 @@ import LoginPage from "@/pages/authentication/login";
 import SignupPage from "@/pages/authentication/signup";
 import Dashboard from "@/pages/dashboard";
 import { useAuth } from "@/hooks/useAuth";
+import JobListPage from "@/pages/job/JobListPage";
 
 export default function App() {
   const { isAuthenticated } = useAuth();
@@ -19,7 +20,9 @@ export default function App() {
           )
         }
       />
+      <Route path="/jobs" element={<JobListPage />} />
 
+      {/* Public routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
 
