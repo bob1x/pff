@@ -1,0 +1,67 @@
+import type { JobQueryParams } from "@/hooks/jobs/useJobHook";
+
+interface FilterSectionProps {
+  filters: JobQueryParams;
+  onFilterChange: (field: keyof JobQueryParams, value: string) => void;
+  onReset: () => void;
+}
+
+export function FilterSection({
+  filters,
+  onFilterChange,
+  onReset,
+}: FilterSectionProps) {
+  const fields: Array<{
+    id: keyof JobQueryParams;
+    label: string;
+    placeholder: string;
+  }> = [
+    {
+      id: "search",
+      label: "Search Title",
+      placeholder: "Developer, Designer…",
+    },
+    {
+      id: "category",
+      label: "Category",
+      placeholder: "Engineering, Marketing…",
+    },
+    { id: "location", label: "Location", placeholder: "Sfax, Remote…" },
+    {
+      id: "experience_level",
+      label: "Experience Level",
+      placeholder: "Junior, Mid, Senior…",
+    },
+  ];
+
+  return (
+    <div className="bg-white p-6 shadow rounded-lg mb-8">
+      <div className="flex justify-between mb-4">
+        <h2 className="text-lg font-semibold">Filter Jobs</h2>
+        <button
+          onClick={onReset}
+          className="text-sm text-blue-600 hover:underline"
+        >
+          Clear Filters
+        </button>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        {fields.map(({ id, label, placeholder }) => (
+          <div key={id}>
+            <label htmlFor={id} className="block text-sm font-medium mb-1">
+              {label}
+            </label>
+            <input
+              id={id}
+              type="text"
+              value={filters[id] || ""}
+              placeholder={placeholder}
+              onChange={(e) => onFilterChange(id, e.target.value)}
+              className="w-full border px-3 py-2 rounded border-gray-300"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

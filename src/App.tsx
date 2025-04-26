@@ -1,12 +1,20 @@
+// src/App.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import LoginPage from "@/pages/authentication/login";
 import SignupPage from "@/pages/authentication/signup";
 import Dashboard from "@/pages/dashboard";
-import { useAuth } from "@/hooks/useAuth";
-import JobListPage from "@/pages/job/JobListPage";
-
+import ResumeBuilderPage from "@/pages/resume-builder/ResumeBuilderPage";
+import JobListPage from "./pages/job/JobListPage";
 export default function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  // While we’re rehydrating, don’t render any routes (or show a spinner)
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">Loading…</div>
+    );
+  }
 
   return (
     <Routes>
@@ -20,13 +28,9 @@ export default function App() {
           )
         }
       />
-      <Route path="/jobs" element={<JobListPage />} />
-
-      {/* Public routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
 
-      {/* Protected route */}
       <Route
         path="/dashboard"
         element={
@@ -34,7 +38,26 @@ export default function App() {
         }
       />
 
-      {/* Catch‑all: 404 or redirect */}
+      <Route
+        path="/builder/:id"
+        element={
+          isAuthenticated ? (
+            <ResumeBuilderPage />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/jobs"
+        element={
+          isAuthenticated ? (
+            <JobListPage/>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -46,12 +46,13 @@ authClient.interceptors.request.use(config => {
 });
 
 const authApi = {
-    /** Sign up a new user, store tokens */
     async signup(data: SignupParams): Promise<AuthResponse> {
         const res = await authClient.post<AuthResponse>('signup/', data);
         const { access, refresh, user } = res.data;
         localStorage.setItem('accessToken', access);
         localStorage.setItem('refreshToken', refresh);
+        localStorage.setItem('authUser', JSON.stringify(user));
+
         return { access, refresh, user };
     },
 
@@ -61,6 +62,8 @@ const authApi = {
         const { access, refresh, user } = res.data;
         localStorage.setItem('accessToken', access);
         localStorage.setItem('refreshToken', refresh);
+        localStorage.setItem('authUser', JSON.stringify(user));
+
         return { access, refresh, user };
     },
 
@@ -86,6 +89,8 @@ const authApi = {
         }
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('authUser');
+
     }
 };
 
