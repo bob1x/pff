@@ -1,83 +1,109 @@
-import { TrendingDownIcon, TrendingUpIcon } from "lucide-react"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  fetchLeaderboard,
+  Application,
+  PaginatedApplications,
+} from "@/apis/HR/applicationApi";
 
-export function SectionCards() {
+interface SectionCardsProps {
+  jobId: number;
+}
+
+export function SectionCards({ jobId }: SectionCardsProps) {
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [count, setCount] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const perPage = 10;
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    fetchLeaderboard(jobId, page)
+      .then((data: PaginatedApplications) => {
+        setApplications(data.results);
+        setCount(data.count);
+      })
+      .catch(() => setError("Failed to load leaderboard."))
+      .finally(() => setLoading(false));
+  }, [jobId, page]);
+
+  const totalPages = Math.ceil(count / perPage);
+
+  if (loading)
+    return <div className="p-4 text-center">Loading leaderboard…</div>;
+  if (error) return <div className="p-4 text-center text-red-500">{error}</div>;
+  if (applications.length === 0)
+    return (
+      <div className="p-4 text-center">No candidates have applied yet.</div>
+    );
+
   return (
-    <div className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
-      <Card className="@container/card">
-        <CardHeader className="relative">
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">$1,250.00</CardTitle>
-          <div className="absolute right-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
-              +12.5%
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Visitors for the last 6 months</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader className="relative">
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">1,234</CardTitle>
-          <div className="absolute right-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingDownIcon className="size-3" />
-              -20%
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <TrendingDownIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Acquisition needs attention</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader className="relative">
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">45,678</CardTitle>
-          <div className="absolute right-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
-              +12.5%
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader className="relative">
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">4.5%</CardTitle>
-          <div className="absolute right-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />
-              +4.5%
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
-        </CardFooter>
-      </Card>
+    <div className="space-y-4 p-4">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Rank</TableHead>
+            <TableHead>Candidate</TableHead>
+            <TableHead>Job</TableHead>
+            <TableHead>Total</TableHead>
+            <TableHead>Experience</TableHead>
+            <TableHead>Skills</TableHead>
+            <TableHead>Projects</TableHead>
+            <TableHead>Education</TableHead>
+            <TableHead>Applied At</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {applications.map((app, idx) => (
+            <TableRow key={app.id}>
+              <TableCell className="font-medium">
+                {(page - 1) * perPage + idx + 1}
+              </TableCell>
+              <TableCell>{app.applicant}</TableCell>
+              <TableCell>{app.job_title}</TableCell>
+              <TableCell>{app.total_score}</TableCell>
+              <TableCell>{app.experience_score}</TableCell>
+              <TableCell>{app.skills_score}</TableCell>
+              <TableCell>{app.projects_score}</TableCell>
+              <TableCell>{app.education_score}</TableCell>
+              <TableCell>{new Date(app.applied_at).toLocaleString()}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <div className="flex justify-center items-center space-x-4">
+        <button
+          className="px-3 py-1 rounded border disabled:opacity-50"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {page} of {totalPages}
+        </span>
+        <button
+          className="px-3 py-1 rounded border disabled:opacity-50"
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          disabled={page === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
-  )
+  );
 }

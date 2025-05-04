@@ -1,4 +1,5 @@
-import { useJobListPageLogic } from "@/hooks/jobs/usejobList";
+// src/pages/JobListPage.tsx
+import { useJobListPageLogic } from "@/hooks/jobs/useJobListPage"; // ← path matches the file we patched
 import { FilterSection } from "@/components/jobs/FilterSection";
 import { JobCard } from "@/components/jobs/JobCard";
 import { Pagination } from "@/components/jobs/Pagination";
@@ -14,7 +15,7 @@ export default function JobListPage() {
     handleFilterChange,
     resetFilters,
     setPage,
-  } = useJobListPageLogic();
+  } = useJobListPageLogic(); // now carries contract_type + open by default
 
   return (
     <div className="max-w-6xl mx-auto p-6">

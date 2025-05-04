@@ -10,7 +10,6 @@ import { ResumeErrorBoundary } from "@/components/Builder/ResumeErrorBoundary";
 export default function BuilderInner() {
   const { id } = useParams<{ id: string }>();
 
-  // now that we're inside <Provider>, useParsedResume can dispatch/clear correctly
   const { loading, error } = useParsedResume();
 
   if (!id) {

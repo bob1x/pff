@@ -30,7 +30,6 @@ export const initialWorkExperience: ResumeWorkExperience = {
 export const initialEducation: ResumeEducation = {
   school: "",
   degree: "",
-  gpa: "",
   date: "",
   descriptions: [],
 };

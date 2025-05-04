@@ -1,4 +1,12 @@
 // src/lib/parsing/types.ts
+
+
+export interface ParsedEducationEntry {
+    school: string;
+    degree: string;
+    date: string;
+    additional_info: string[];
+}
 export interface RawExperienceEntry {
     job_title: string;
     company: string;
@@ -39,15 +47,18 @@ export interface RawParsedResume {
     location: string; email?: string; phone?: string; linkedin?: string 
 };
     experience?: Array<{
+        company: string;
+        date: string;
         title: string; 
         duration?: string;
         description: string[];
     }>;
     projects?: Array<{
+        date: string;
         title: string;
         description: string[];
     }>;
-    education?: string;
+    education?: ParsedEducationEntry[];
     skills?: string;
     certifications?: string[];
     leadership?: string[];

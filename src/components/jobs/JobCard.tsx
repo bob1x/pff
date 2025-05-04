@@ -17,12 +17,12 @@ export function JobCard({ job }: JobCardProps) {
             {job.category} • {job.location} • {job.experience_level}
           </p>
           <p className="text-gray-700 text-sm mb-4">
-            {job.full_description.slice(0, 200)}...
+            {job.job_description.slice(0, 200)}...
           </p>
         </div>
         <div className="mt-auto pt-2">
           <Link
-            to={`/apply/${job.id}`}
+            to={`/jobs/${job.id}/apply`}
             className="inline-block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300"
           >
             Apply

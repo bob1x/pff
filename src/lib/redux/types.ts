@@ -18,7 +18,6 @@ export interface ResumeEducation {
   school: string;
   degree: string;
   date: string;
-  gpa: string;
   descriptions: string[];
 }
 

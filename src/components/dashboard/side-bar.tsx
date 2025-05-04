@@ -18,11 +18,13 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "lucide-react"
+import  { useContext } from "react";
 
 import { NavDocuments } from "./nav-documents"
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
+import { AuthContext } from "../../hooks/context/AuthContext";
 import {
   Sidebar,
   SidebarContent,
@@ -33,12 +35,28 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
+const useactiveUser = () => {
+  
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const auth = useContext(AuthContext);
+
+  if (!auth) return null;
+  const { user, loading, isAuthenticated } = auth;
+
+  if (loading || !isAuthenticated || !user) {
+    return null;
+  }
+
+  return {
+    displayName:
+      user.first_name && user.last_name
+        ? `${user.first_name} ${user.last_name}`
+        : user.username,
+  };
+};
+
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+  user: useactiveUser(),
   navMain: [
     {
       title: "Dashboard",
@@ -148,7 +166,7 @@ const data = {
       icon: FileIcon,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (

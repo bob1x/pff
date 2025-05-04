@@ -6,6 +6,10 @@ import SignupPage from "@/pages/authentication/signup";
 import Dashboard from "@/pages/dashboard";
 import ResumeBuilderPage from "@/pages/resume-builder/ResumeBuilderPage";
 import JobListPage from "./pages/job/JobListPage";
+import ApplyJobPage from "@/pages/job/ApplyJobPage";
+import { LogoutPage } from "@/pages/authentication/logout";
+import ResumeBuilder  from "@/pages/resume-builder/page";
+
 export default function App() {
   const { isAuthenticated, loading } = useAuth();
 
@@ -37,7 +41,16 @@ export default function App() {
           isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
         }
       />
-
+      <Route
+        path="/new-resume"
+        element={
+          isAuthenticated ? (
+            <ResumeBuilder />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
       <Route
         path="/builder/:id"
         element={
@@ -51,13 +64,12 @@ export default function App() {
       <Route
         path="/jobs"
         element={
-          isAuthenticated ? (
-            <JobListPage/>
-          ) : (
-            <Navigate to="/login" replace />
-          )
+          isAuthenticated ? <JobListPage /> : <Navigate to="/login" replace />
         }
       />
+      <Route path="/jobs/:jobId/apply" element={<ApplyJobPage />} />
+      <Route path="/logout" element={<LogoutPage />} />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
