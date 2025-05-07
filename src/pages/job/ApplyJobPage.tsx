@@ -16,7 +16,6 @@ export default function ApplyJobPage() {
     handleUpload,
   } = useApplyJob();
 
-  /* ─ Loading / error states ─ */
   if (loadingJob) return <Spinner />;
   if (jobError || !job)
     return (

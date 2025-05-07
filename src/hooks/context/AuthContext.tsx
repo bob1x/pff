@@ -1,5 +1,5 @@
 // src/components/context/AuthContext.tsx
-import { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, useEffect, ReactNode, useMemo } from "react";
 import authApi, { AuthUser } from "../../apis/authApi";
 
 export interface AuthContextType {
@@ -15,8 +15,11 @@ export interface AuthContextType {
     password: string;
   }) => Promise<boolean>;
   logout: () => Promise<void>;
+  isHR: boolean;
+  isJobSeeker: boolean;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -24,7 +27,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true); // new
 
-  // On mount, try to rehydrate from localStorage
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     const stored = localStorage.getItem("authUser");
@@ -91,10 +93,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setIsAuthenticated(false);
   };
-
+  const isHR = useMemo(() => Boolean(user && user.role === "hr"), [user]);
+  const isJobSeeker = useMemo(
+    () => Boolean(user && user.role === "user"),
+    [user]
+  );
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, loading, login, signup, logout }}
+      value={{
+        isAuthenticated,
+        user,
+        loading,
+        login,
+        signup,
+        logout,
+        isHR,
+        isJobSeeker,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -81,7 +81,7 @@ export function useSignupForm() {
 
       if (ok) {
         setSuccess(true);
-        setTimeout(() => navigate("/dashboard"), 1500);
+        setTimeout(() => navigate("/login"), 1500);
       } else {
         setErrors({ form: "Signup failed. Please try again." });
       }

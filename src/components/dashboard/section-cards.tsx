@@ -1,3 +1,4 @@
+// src/components/stats/SectionCards.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -14,6 +15,7 @@ import {
   Application,
   PaginatedApplications,
 } from "@/apis/HR/applicationApi";
+import { TotalApplicationsChart } from "@/components/dashboard/charts/TotalApplicationsChart";
 
 interface SectionCardsProps {
   jobId: number;
@@ -52,6 +54,9 @@ export function SectionCards({ jobId }: SectionCardsProps) {
 
   return (
     <div className="space-y-4 p-4">
+      {/* Chart on top */}
+      <TotalApplicationsChart jobId={jobId} />
+
       <Table>
         <TableHeader>
           <TableRow>

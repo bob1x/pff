@@ -49,12 +49,7 @@ export function SiteNavbar() {
         >
           Reports
         </a>
-        <a
-          href="#"
-          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-        >
-          Dashboard
-        </a>
+        
       </nav>
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" className="relative">
